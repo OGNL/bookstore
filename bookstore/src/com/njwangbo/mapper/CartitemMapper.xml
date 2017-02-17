@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.njwangbo.mapper.CartitemMapper" >
+
+<resultMap type="com.njwangbo.po.Cartitem" id="CarBookMap">
+  <id  column="cartItemId"  property="cartitemId"/>
+   <result column="quantity" property="quantity" />
+   <result column="num" property="num"/>
+   <association property="book" javaType="com.njwangbo.po.Book">
+     <id column="bid" property="bid" />
+     <result column="image_b" property="image_b"/>
+     <result column="bname" property="bname"/>
+     <result column="price" property="price"/>
+     <result column="currPrice" property="currPrice"/>
+     <result column="discount" property="discount"/>
+     <result column="stock" property="stock"/>
+     
+   </association>
+   
+</resultMap>
+
+<select id="findall" parameterType="User" resultMap="CarBookMap">
+ select t_cartitem.*,
+	       t_book.*
+	       from t_cartitem, t_book
+	  	   where
+	  	   t_cartitem.bid=t_book.bid
+	  	   and 
+	       t_cartitem.uid=#{uid}
+</select>
+
+<select id="findall2" parameterType="User" resultMap="CarBookMap">
+ select t_cartitem.*,
+	       t_book.*
+	       from t_cartitem, t_book
+	  	   where
+	  	   t_cartitem.bid=t_book.bid
+	  	   and 
+	       t_cartitem.uid=#{uid}
+	       and
+	       t_cartitem.num=1
+</select>
+
+
+<!--   <select id="findonebook" parameterType="Book" resultType="com.njwangbo.po.Book">
+  select *
+  from 
+  t_book
+  where 
+  t_book.bid=#{bid}
+</select>
+-->
+
+<select id="findonebook" parameterType="Cartitem" resultType="com.njwangbo.po.Cartitem">
+  select *
+  from 
+  t_cartitem 
+  where 
+  bid=#{bid}
+  and
+  uid=#{uid}
+</select>
+
+
+<update id="updateCartitem" parameterType="Cartitem">
+     update t_cartitem set quantity=#{quantity} ,num=#{num}  where cartitemId=#{cartitemId}
+</update>
+
+<insert id="addCartitem" parameterType="Cartitem">
+    insert into t_cartitem  (quantity,bid,uid)values(#{quantity},#{bid},#{uid})
+</insert>
+
+<delete id="deleteCartitem" parameterType="Cartitem">
+	delete from t_cartitem where cartitemId=#{cartitemId}
+</delete>
+
+<delete id="deleteBatch" parameterType="com.njwangbo.vo.Cartitemvo" >
+	delete from t_cartitem
+	<where>
+	  <if test="ids!=null" >
+	  		<foreach collection="ids" item="deleteid" open="cartitemId in (" close=")" separator="," >
+	  			#{deleteid}
+	  		</foreach>
+	  </if>
+	     
+	</where>
+
+</delete>
+
+<delete id="deleteBatchByNum" parameterType="com.njwangbo.vo.Cartitemvo" >
+	delete from t_cartitem
+	<where>
+	  <if test="ids!=null" >
+	  		<foreach collection="ids" item="deleteid" open="cartitemId in (" close=")" separator="," >
+	  			#{deleteid}
+	  		</foreach>
+	  </if>
+	    and num=1
+	</where>
+</delete>
+
+<select id="findByBid" parameterType="String" resultType="Cartitem">
+	select * from t_cartitem where bid = #{bid};
+</select>
+
+	
+	       
+
+
+</mapper>
+	
+	

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.njwangbo.mapper.OrderitemMapper">
+	<select id="findByOid" parameterType="String" resultType="com.njwangbo.po.Orderitem">
+		select * from t_orderitem where oid = #{oid};
+	</select>
+	
+	<select id="findByBid" parameterType="String" resultType="com.njwangbo.po.Orderitem">
+		select * from t_orderitem where bid = #{bid};
+	</select>
+	
+	<insert id="add" parameterType="Orderitem">
+		insert into t_orderitem
+		(orderItemId,quantity,subtotal,bid,bname,currPrice,image_b,oid)
+		values
+		(#{orderItemId},#{quantity},#{subtotal},#{bid},#{bname},#{currPrice},#{image_b},#{oid})
+	</insert>
+</mapper>

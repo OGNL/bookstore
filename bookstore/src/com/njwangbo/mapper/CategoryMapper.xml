@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.njwangbo.mapper.CategoryMapper">
+	<insert id="addI" parameterType="com.njwangbo.po.Category">
+		insert into t_category(cname, description) values(#{cname}, #{description});
+	</insert>
+	
+	<insert id="addII" parameterType="com.njwangbo.po.Category">
+		insert into t_category(cname, pid, description) values(#{cname},#{pid}, #{description});
+	</insert>
+	
+	<delete id="delete" parameterType="int">
+		delete from t_category where cid = #{cid};
+	</delete>
+	
+	<update id="update" parameterType="com.njwangbo.po.Category">
+		update t_category set cname = #{cname},
+		<if test="pid != 0">
+			pid=#{pid},
+		</if>
+		 description = #{description}  where cid = #{cid};
+	</update>
+	
+	<select id="findById" parameterType="int" resultType="com.njwangbo.po.Category">
+		select * from t_category where cid = #{cid};
+	</select>
+	
+	<select id="findByPId" parameterType="int" resultType="com.njwangbo.po.Category">
+		select * from t_category where pid = #{pid};
+	</select>
+	<resultMap type="com.njwangbo.vo.CategoryVo" id="PCMap">
+		<id column="id" property="id"/>
+		<result column="pid" property="pid"/>
+		<result column="pname" property="pname"/>
+		<result column="pdes" property="pdes"/>
+		<collection property="cats" ofType="Category">
+			<id column="cid" property="cid"/>
+			<result column="cname" property="cname"/>
+			<result column="description" property="description"/>
+		</collection>
+	</resultMap>
+	<select id="findAll" resultMap="PCMap">
+		select
+			 p.pid,
+			 p.cid id,
+		 	 p.cname pname,
+		 	 p.description pdes,
+		 	 c.cid,
+		 	 c.cname,
+		 	 c.description
+		from 
+			t_category p
+		left join
+			t_category c
+		on 
+			p.cid = c.pid;
+		
+	</select>
+	
+	<resultMap type="com.njwangbo.vo.CategoryVo" id="PCMaps">
+		<id column="id" property="id"/>
+		<result column="pid" property="pid"/>
+		<result column="pname" property="pname"/>
+		<result column="pdes" property="pdes"/>
+		<result column="cname" property="cname"/>
+		<result column="cdes" property="cdes"/>
+		<result column=""/>
+		
+	</resultMap>
+	
+	<select id="findVoById" parameterType="int" resultMap="PCMaps">
+	   select
+			 p.pid,
+			 p.cid id,
+		 	 p.cname,
+		 	 p.description cdes,
+		 	 c.cname pname
+		from 
+			t_category p
+		left join
+			t_category c
+		on 
+			p.pid = c.cid
+		where
+			p.cid = #{cid};
+	</select>
+	
+	<select id="findCategoryI" resultType="Category">
+			select * from t_category where pid is null;
+	</select>
+	
+	<select id="findByCname" resultType="Category" parameterType="String">
+			select * from t_category where cname = #{cname};
+	</select>
+</mapper>

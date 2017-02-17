@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.njwangbo.mapper.BookMapper">
+	
+	<select id="findBy" resultType="Book" parameterType="String">
+		select * from t_book 
+		<where>
+		<if test="param1!=null and param1!=''">
+			and cid = #{param1}
+		</if>
+		<if test="param2 != null and param2 != ''">
+			and bname like '%${param2}%'
+		</if>
+		<if test="param3 != null and param3 != ''">
+			and author like '%${param3}%'
+		</if>
+		<if test="param4 != null and param4 != ''">
+			and press like '%${param4}%'
+		</if>
+		</where>
+		limit #{param5},8
+	</select>
+	
+	<insert id="add" parameterType="Book">
+		insert into t_book (bid,bname,author,price,currPrice,discount,
+		press,publishtime,edition,pageNum,wordNum,printtime,booksize,
+		paper,cid,image_w,image_b,stock) 
+		values 
+		(#{bid},#{bname},#{author},#{price},#{currPrice},#{discount},
+		#{press},#{publishtime},#{edition},#{pageNum},#{wordNum},#{printtime},#{booksize},
+		#{paper},#{cid},#{image_w},#{image_b},#{stock})
+	</insert>
+
+	<delete id="delete" parameterType="String">
+		delete from t_book where bid = #{id}
+	</delete>
+	
+	<update id="update" parameterType="Book">
+		update t_book set bname = #{bname},currPrice = #{currPrice},price = #{price},discount = #{discount},
+		author = #{author},press = #{press},publishtime = #{publishtime}, edition = #{edition},pageNum = #{pageNum},
+		wordNum = #{wordNum},printtime = #{printtime},booksize = #{booksize},paper = #{paper},cid = #{cid},stock = #{stock}
+		,image_w=#{image_w},image_b=#{image_b}
+		where bid = #{bid}
+	</update>
+	
+	<select id="findBookById" parameterType="String" resultType="Book">
+		select * from t_book where bid = #{id} 
+	</select>
+	
+	<select id="findByName" parameterType="String" resultType="Book">
+		select * from t_book where bname=#{name}
+	</select>
+	
+	<select id="findSearch" parameterType="String" resultType="Book">
+		select * from t_book where 
+		bname like '%${value}%'
+		or author like '%${value}%'
+	    or press like '%${value}%'
+	</select>
+	
+	<select id="maxPage" resultType="int" parameterType="String">
+		select count(*) from t_book 
+		<where><if test="param1!=null and param1!=''">
+			and cid = #{param1}
+		</if><if test="param2 != null and param2 != ''">
+			and bname like '%${param2}%'
+		</if><if test="param3 != null and param3 != ''">
+			and author like '%${param3}%'
+		</if><if test="param4 != null and param4 != ''">
+			and press like '%${param4}%'
+		</if></where></select>
+		
+		<select id="findBookByCid" resultType="Book" parameterType="int">
+				select * from t_book where cid = #{cid};
+		</select>
+</mapper>

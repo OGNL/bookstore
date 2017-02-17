@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<mapper namespace="com.njwangbo.mapper.OrderMapper">
+	
+	<update id="update" parameterType="com.njwangbo.po.Order">
+		update t_order set status = #{status} where oid = #{oid}
+	</update>
+
+	
+	<select id="findBySome" parameterType="int" resultType="Order">
+		select * from t_order where 1=1
+			<if test="0 != param1">
+				and	status = #{param1}
+			</if>
+				limit #{param2},5
+	</select>
+	
+	<!--<resultMap type="com.njwangbo.po.Order" id="ooMapper">
+		<id column="oid" property="oid"/>
+		<result column="ordertime" property="ordertime"/>
+		<result column="total" property="total"/>
+		<result column="status" property="status"/>
+		<result column="address" property="address"/>
+		
+		<collection property="orderitemlist" ofType="com.njwangbo.po.Orderitem">
+			<id column="orderItemId" property="orderItemId"/>
+			<result column="image_b" property="image_b"/>
+		</collection>
+	</resultMap>-->
+	
+	<select id="findByUid" parameterType="int" resultType="Order">
+		select * from t_order 
+		where uid = #{param1} limit #{param2},5
+	</select>
+	
+	<insert id="add" parameterType="Order">
+		insert into t_order (
+			oid,ordertime,total,status,address,uid)
+			values 
+			(#{oid},#{ordertime},#{total},#{status},#{address},#{uid})
+	</insert>
+	
+	<select id="showgetCount" resultType="int" parameterType="Order">
+			select count(*) from t_order 
+				<where>
+					<if test="status != 0">
+					 and status = #{status} 
+					</if>
+				</where> 
+	</select>
+	
+	<select id="getcountByUid" parameterType="int" resultType="int">
+		select count(*) from t_order
+		where uid = #{uid}
+	</select>
+	
+	<select id="findByoid" parameterType="String" resultType="order">
+		select * from t_order where oid = #{oid}
+	</select>
+</mapper>
